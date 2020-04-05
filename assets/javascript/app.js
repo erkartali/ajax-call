@@ -1,37 +1,117 @@
 
+var gifArray = [];
+
 $('.search-button').click(function (event) {
-    var userInput = $('#image-input').val();
-    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=5&rating=g';
-    // alert(userInput);
-    // alert(queryURL);
+    var userInput = $("#image-input").val();
     event.preventDefault();
     
-    $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function movieData(response) {
-          // $("#movie-view").text(JSON.stringify(response));
-          console.log(response.data);
-
-          var item = response.data
-
-          for (let i = 0; i < item.length; i++) {
-              var imageRating = item[i].rating;
-              var imageDisplay = $('<p>');
-              imageDisplay.text(imageRating);
-              $('.image-results').prepend(imageDisplay);
-
-              var image = item[i].images.original_still.url;
-              console.log(image)
-              var imageDisplay = $('<img>');
-              imageDisplay.attr('src', image);
-              $('.image-results').prepend(imageDisplay);
-              
-          }
-        });
-}) 
-
-
-
-
+    // Constructing a queryURL using the user input
+    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=5&rating=g';
     
+    // Performing an AJAX request with the queryURL
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+    .then(function (response) {
+    // console.log(queryURL);
+
+        console.log(response.data);
+        var results = response.data;
+
+        for (var i = 0; i < results.length; i++) {
+            var imageDiv = $("<div>");
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            var imageThing = $("<img>").addClass('gif');
+            imageThing.attr("src", results[i].images.fixed_height_still.url);
+            imageThing.attr("data-still", results[i].images.fixed_height_still.url);
+            imageThing.attr("data-animate", results[i].images.fixed_height.url);
+            imageThing.attr("data-state", 'animate');
+
+            imageDiv.append(imageThing);
+            imageDiv.append(p);
+
+            $(".third").prepend(imageDiv);
+        }
+
+    });
+    $('#image-input').val('');
+    
+    if (userInput.val != '' && userInput != '') {
+        gifArray.push(userInput);
+        renderButtons()
+    } else {
+        alert('You gotta type something bro.')
+    }
+});
+
+function renderButtons() {
+    console.log(gifArray);
+    $(".button-div").empty();
+
+    for (var i = 0; i < gifArray.length; i++) {
+
+      var a = $("<button>");
+      a.addClass("image-button button");
+      a.attr("data-name", gifArray[i]);
+      a.text(gifArray[i]);
+      
+      $(".button-div").append(a); 
+    }
+}
+
+// $(".gif").on("click", function() {
+//     var state = $(this).attr("data-state");
+
+//     if (state === "still") {
+//         $(this).attr("src", $(this).attr("data-animate"));
+//         $(this).attr("data-state", "animate");
+//     } else {
+//         $(this).attr("src", $(this).attr("data-still"));
+//         $(this).attr("data-state", "still");
+//     }
+// });
+
+function alertGifName() {
+    var gifName = $(this).attr("data-name");
+    renderButtons();
+    // alert(gifName);
+
+    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + gifName + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=5&rating=g';
+
+    $.ajax({
+        url: queryURL,
+        method: "GET"
+    })
+    .then(function (response) {
+    // console.log(queryURL);
+
+        console.log(response.data);
+        var results = response.data;
+
+        for (var i = 0; i < results.length; i++) {
+            var imageDiv = $("<div>");
+            var p = $("<p>").text("Rating: " + results[i].rating);
+            var imageThing = $("<img>").addClass('gif');
+            imageThing.attr("src", results[i].images.fixed_height.url);
+            imageThing.attr("data-still", results[i].images.fixed_height_still.url);
+            imageThing.attr("data-animate", results[i].images.fixed_height.url);
+            imageThing.attr("data-state", 'animate');
+
+            imageDiv.append(imageThing);
+            imageDiv.append(p);
+
+            $(".third").prepend(imageDiv);
+        }
+
+    });
+}
+
+$("#search-button").on("click", function(event) {
+    event.preventDefault();
+    renderButtons();
+    
+    
+  });
+
+  $(document).on("click", ".image-button", alertGifName);
