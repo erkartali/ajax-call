@@ -68,7 +68,7 @@ function alertGifName() {
     renderButtons();
     // alert(gifName);
 
-    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + gifName + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=5&rating=g';
+    var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + gifName + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=5&rating=g';
 
     $.ajax({
         url: queryURL,
