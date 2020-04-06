@@ -6,7 +6,7 @@ $('.search-button').click(function (event) {
     event.preventDefault();
     
     // Constructing a queryURL using the user input
-    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=5&rating=g';
+    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=10&rating=g';
     
     // Performing an AJAX request with the queryURL
     $.ajax({
@@ -14,7 +14,7 @@ $('.search-button').click(function (event) {
         method: "GET"
     })
     .then(function (response) {
-    // console.log(queryURL);
+    console.log(queryURL);
 
         console.log(response.data);
         var results = response.data;
@@ -26,12 +26,13 @@ $('.search-button').click(function (event) {
             imageThing.attr("src", results[i].images.fixed_height_still.url);
             imageThing.attr("data-still", results[i].images.fixed_height_still.url);
             imageThing.attr("data-animate", results[i].images.fixed_height.url);
-            imageThing.attr("data-state", 'animate');
+            imageThing.attr("data-state", "still");
 
             imageDiv.append(imageThing);
             imageDiv.append(p);
 
             $(".third").prepend(imageDiv);
+            whatever();
         }
 
     });
@@ -60,17 +61,7 @@ function renderButtons() {
     }
 }
 
-// $(".gif").on("click", function() {
-//     var state = $(this).attr("data-state");
 
-//     if (state === "still") {
-//         $(this).attr("src", $(this).attr("data-animate"));
-//         $(this).attr("data-state", "animate");
-//     } else {
-//         $(this).attr("src", $(this).attr("data-still"));
-//         $(this).attr("data-state", "still");
-//     }
-// });
 
 function alertGifName() {
     var gifName = $(this).attr("data-name");
@@ -84,9 +75,6 @@ function alertGifName() {
         method: "GET"
     })
     .then(function (response) {
-    // console.log(queryURL);
-
-        console.log(response.data);
         var results = response.data;
 
         for (var i = 0; i < results.length; i++) {
@@ -103,15 +91,28 @@ function alertGifName() {
 
             $(".third").prepend(imageDiv);
         }
-
+        whatever();
     });
 }
 
 $("#search-button").on("click", function(event) {
     event.preventDefault();
     renderButtons();
-    
-    
-  });
+});
 
-  $(document).on("click", ".image-button", alertGifName);
+function whatever() {
+    $(".gif").on("click", function() {
+        console.log('this');
+        var state = $(this).attr("data-state");
+    
+        if ($(this).attr("data-state") === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+        }
+    });
+    
+}
+
