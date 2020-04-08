@@ -6,7 +6,7 @@ $('.search-button').click(function (event) {
     event.preventDefault();
     
     // Constructing a queryURL using the user input
-    var queryURL = 'http://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=10&rating=g';
+    var queryURL = 'https://api.giphy.com/v1/gifs/search?q=' + userInput + '&api_key=4xhpDEomHg5DzxEn208KYSwlZIcF6lzd&limit=10&rating=g';
     
     // Performing an AJAX request with the queryURL
     $.ajax({
